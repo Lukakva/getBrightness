@@ -51,17 +51,10 @@
 }
 
 - (float)getPixelBrightness:(UIColor *)pixel {
-    
-    float brightness = 0;
-    
     CGFloat r = 0.0, g = 0.0, b = 0.0, a = 0.0;
     [pixel getRed:&r green:&g blue:&b alpha:&a];
     
-    brightness = r * 0.333 + g * 0.333 + b * 0.333;
-    
-    if (brightness == 0.999) brightness = 1;
-    
-    return brightness;
+    return (r + g + b) / 3;
 }
 
 - (float)getBrightness {

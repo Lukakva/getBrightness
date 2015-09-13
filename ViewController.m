@@ -19,9 +19,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    UIImage *image = [[UIImage alloc] initWithData:[NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"dark" ofType:@"jpg"]]];
-    
-    [[UIImage alloc] initWithContents]
+    UIImage *image = [[UIImage alloc] initWithData:[NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"light" ofType:@"jpg"]]];
 
     float brightness = [image getBrightness];
     NSLog(@"%f", brightness);

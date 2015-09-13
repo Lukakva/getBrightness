@@ -24,10 +24,10 @@
     NSUInteger width = CGImageGetWidth(cgImage);
     NSUInteger height = CGImageGetHeight(cgImage);
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    int bytesPerPixel = 4;
+    int bytesPerPixel = 4; // kCGBitmap requires 4 bytes
     int bytesPerRow = bytesPerPixel * 1;
     NSUInteger bitsPerComponent = 8;
-    unsigned char pixelData[4] = { 0, 0, 0, 0 };
+    unsigned char pixelData[4] = {0, 0, 0, 0};
     CGContextRef context = CGBitmapContextCreate(pixelData,
                                                  1,
                                                  1,
@@ -47,8 +47,7 @@
     CGFloat red   = (CGFloat)pixelData[0] / 255.0f;
     CGFloat green = (CGFloat)pixelData[1] / 255.0f;
     CGFloat blue  = (CGFloat)pixelData[2] / 255.0f;
-    CGFloat alpha = (CGFloat)pixelData[3] / 255.0f;
-    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+    return [UIColor colorWithRed:red green:green blue:blue alpha:1];
 }
 
 - (float)getPixelBrightness:(UIColor *)pixel {
@@ -58,32 +57,28 @@
     CGFloat r = 0.0, g = 0.0, b = 0.0, a = 0.0;
     [pixel getRed:&r green:&g blue:&b alpha:&a];
     
-    brightness = r * 0.25 + g * 0.25 + b * 0.25 + a * 0.25;
+    brightness = r * 0.333 + g * 0.333 + b * 0.333;
+    
+    if (brightness == 0.999) brightness = 1;
     
     return brightness;
 }
 
 - (float)getBrightness {
-    NSMutableArray *pixels = [[NSMutableArray alloc] init];
-    
     CGFloat height = self.size.height;
     CGFloat width = self.size.width;
+    
+    float sum = 0;
     
     for (unsigned long h = 1; h <= height; h++) {
         for (unsigned long w = 1; w <= width; w++) {
             CGPoint pixelPosition = CGPointMake(w, h);
             UIColor *pixel = [self colorAtPixel:pixelPosition];
             float brightness = [self getPixelBrightness:pixel];
-            [pixels addObject:[NSNumber numberWithFloat:brightness]];
+            sum += brightness;
         }
     }
     
-    float sum = 0;
-    
-    for (unsigned long i = 0; i < [pixels count]; i++) {
-        sum += [[pixels objectAtIndex:i] floatValue];
-    }
-    
-    return sum / [pixels count];
+    return sum / (width * height);
 }
 @end

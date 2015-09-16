@@ -13,7 +13,7 @@ float brightness = [image getBrightness];
 
 if (brightness > 0.5) {
     // upload to server
-] else {
+} else {
     // nope
 }
 ```
